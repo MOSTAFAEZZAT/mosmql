@@ -1,12 +1,37 @@
 {
-  "name": "mql-mongodb-nodejs",
+  "name": "mosmqlmongo",
   "version": "1.0.0",
-  "description": "",
+  "description": "Generate a MongoDb Query Language (MQL) through OpenAI GPT",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "mostafaezzat",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "axios": "^0.21.4",
+    "bson": "^6.1.0",
+    "dotenv": "^16.3.1",
+    "follow-redirects": "^1.15.3",
+    "memory-pager": "^1.5.0",
+    "mongodb": "^6.1.0",
+    "mongodb-connection-string-url": "^2.6.0",
+    "openai-api": "^1.3.1",
+    "punycode": "^2.3.0",
+    "sparse-bitfield": "^3.0.3",
+    "tr46": "^3.0.0",
+    "undici-types": "^5.25.3",
+    "webidl-conversions": "^7.0.0",
+    "whatwg-url": "^11.0.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MOSTAFAEZZAT/mql-mongodb-nodejs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MOSTAFAEZZAT/mql-mongodb-nodejs/issues"
+  },
+  "homepage": "https://github.com/MOSTAFAEZZAT/mql-mongodb-nodejs#readme"
 }

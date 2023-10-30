@@ -13,7 +13,7 @@ const client = new MongoClient(process.env.uri, {
     }
 });
 
-async function run() {
+async function executeMongodbQuery(query) {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
@@ -21,82 +21,50 @@ async function run() {
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
-
         const database = client.db("sample_restaurants")
-
-
-        var query = 'database.collection("restaurants").findOne({ restaurant_id: "30075445"});';
-        var dbres;
-        var resultDb = eval(query).then(res => { return res; })
-        // var promise = resultDb;
-        // var data = promise.then(res => {
-        //     resolve
-        // })
-        var dbResult = await example(resultDb)
-        console.log("here " + JSON.stringify(dbResult._id))
-        // console.log(data + dbres)
-        // database.eval('function(){ return ' + query + '.toArray(); }', function (err, result) {
-        //     console.log("the result is", result);
-        // // }); 
-        // const res = eval("(async () => { const results = await database.collection('restaurants').findOne({ restaurant_id: '30075445' }); return results;   })()")
-        // console.log(res)
-
-
-
-        // const DB = await Object.getPrototypeOf(async function () { }).constructor("const results = await database.collection('restaurants').findOne({ restaurant_id: '30075445' }); ")();
-        // console.log(DB)
-
-        // client.db.eval('async function test(){ return await' + query + '.toArray(); }', function (err, result) {
-        //     console.log("the result is", result);
-        //     console.log("the result is", err);
-
-        // })
-        // const res = await database.collection("restaurants").findOne({ restaurant_id: "30075445" });
-        // console.log(res);
-        // const movie = await movies.find().toArray();
-        // Print the document returned by findOne()
-        // console.log(resturant);
-
-
-        // Execute query
-
-
+        var query = 'database.collection("restaurants").findOne({ restaurant_id: "30075445"})';
+        var dbResult = eval(query).then(res => { return res; });
+        var dbResult = await databaseDataResult(dbResult)
+        // console.log("here " + JSON.stringify(dbResult))
+        return JSON.stringify(dbResult);
     } finally {
         // Ensures that the client will close when you finish/error
-        // await client.close();
+        await client.close();
     }
 }
-run().catch(console.dir);
-async function example(promise) {
+// executeMongodbQuery().catch(console.dir);
+async function databaseDataResult(promise) {
     const data = await promise;
-    console.log(data);
-    var secdata = data;
-    return secdata;
+    return data;
 }
 
 
 async function textToMql(query) {
 
-    const openai_client = new OpenAI(process.env.OPEN_AI_KEY);
+    // const openai_client = new OpenAI(process.env.OPEN_AI_KEY);
 
-    var data = await fs.promises.readFile('./models/trainingModels/TrainingModels.txt', 'utf8');
+    // var data = await fs.promises.readFile('./models/trainingModels/TrainingModels.txt', 'utf8');
 
-    const learningPath = data;
+    // const learningModel = data;
 
-    var aiInput = learningPath + "Q:" + query + "\nA:";
-    //  console.log(aiInput); 
-    const gptResponse = await openai_client.complete({
-        engine: 'davinci',
-        prompt: aiInput,
-        "temperature": 0.3,
-        "max_tokens": 400,
-        "top_p": 1,
-        "frequency_penalty": 0.2,
-        "presence_penalty": 0,
+    // var mqlQueryAi = learningModel + "Q:" + query + "\nA:";
+    // //  console.log(aiInput); 
+    // const response = await openai_client.complete({
+    //     engine: 'davinci',
+    //     prompt: mqlQueryAi,
+    //     "temperature": 0.3,
+    //     "max_tokens": 400,
+    //     "top_p": 1,
+    //     "frequency_penalty": 0.2,
+    //     "presence_penalty": 0,
+    // });
 
-    });
+    // response.data.choices[0].text
+    const mongodbResult = await executeMongodbQuery('database.collection("restaurants").findOne({ restaurant_id: "30075445"})');
+    console.log(mongodbResult);
 
-    console.log("Final Response" + gptResponse.data.choices[0].text);
+    // For Debugging 
+    // console.log("Final Response" + response.data.choices[0].text);
 }
 
-// textToMql('Query peachy_scrapped_data collection for companyName with value "Adobe"');
+textToMql("test");
