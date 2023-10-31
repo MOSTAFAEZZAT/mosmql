@@ -1,5 +1,5 @@
 {
-  "name": "mosmqlmongo",
+  "name": "mosmql",
   "version": "1.0.0",
   "description": "Generate a MongoDb Query Language (MQL) through OpenAI GPT",
   "main": "index.js",
