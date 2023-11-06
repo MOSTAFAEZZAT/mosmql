@@ -34,7 +34,7 @@ async function executeMongodbQuery(query, mongodbUri) {
         return JSON.stringify(dbResult);
     } finally {
         // Ensures that the client will close when you finish/error
-        // await client.close();
+        await client.close();
     }
 }
 
@@ -48,7 +48,10 @@ async function mosmql(query, openaiApiKey, filePath, mongodbUri) {
 
     const dbQuery = await openaiCompletion(query, openaiApiKey, filePath);
     const mongodbResult = await executeMongodbQuery(dbQuery, mongodbUri);
-    console.log(mongodbResult);
+    // in case of debugging uncomment
+    //  console.log(mongodbResult);
+    return mongodbResult;
+
 
 }
 
