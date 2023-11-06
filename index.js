@@ -28,7 +28,7 @@ async function executeMongodbQuery(query, mongodbUri) {
         // var query = 'db.collection("restaurants").find({"grades.score": {$gt: 10}})';
         query = query.toString().replace(/\\/g, '');
         // uncomment to debug
-        console.log("query" + query);
+        // console.log("query" + query);
         var dbResult = eval(query).then(res => { return res; });
         var dbResult = await databaseDataResult(dbResult)
         return JSON.stringify(dbResult);
