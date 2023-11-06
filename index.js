@@ -9,7 +9,6 @@ const { resolve } = require('path');
 async function executeMongodbQuery(query, mongodbUri) {
     try {
 
-        mongodbUri = process.env.uri;
         // Create a MongoClient with a MongoClientOptions object to set the Stable API version
         const client = new MongoClient(mongodbUri, {
             serverApi: {
