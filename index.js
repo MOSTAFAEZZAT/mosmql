@@ -85,8 +85,8 @@ async function openaiCompletion(query, openaiApiKey, filePath) {
     return dbQuery;
 }
 
-mosmql("Query restaurants collection for restaurants with American cuisine", process.env.OPENAI_API_KEY,
-    './models/trainingModels/TrainingModels.txt', process.env.uri);
+// mosmql("Query restaurants collection for restaurants with American cuisine", process.env.OPENAI_API_KEY,
+//     './models/trainingModels/TrainingModels.txt', process.env.uri);
 
 
 module.exports = { mosmql };
