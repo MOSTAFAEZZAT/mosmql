@@ -10,7 +10,7 @@ async function executeMongodbQuery(query, mongodbUri) {
     try {
 
         // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-        const client = new MongoClient(mongodbUri, {
+        var client = new MongoClient(mongodbUri, {
             serverApi: {
                 version: ServerApiVersion.v1,
                 strict: true,
@@ -30,9 +30,13 @@ async function executeMongodbQuery(query, mongodbUri) {
         // uncomment to debug
         // console.log("query" + query);
         var dbResult = eval(query).then(res => { return res; });
-        var dbResult = await databaseDataResult(dbResult)
+        var dbResult = await databaseDataResult(dbResult);
         return JSON.stringify(dbResult);
-    } finally {
+
+    } catch (err) {
+        console.log(err);
+    }
+    finally {
         // Ensures that the client will close when you finish/error
         await client.close();
     }
@@ -72,7 +76,6 @@ async function openaiCompletion(query, openaiApiKey, filePath) {
         "temperature": 0.3,
         "max_tokens": 400,
         "top_p": 1,
-
         "stop": ["\n"]
     });
 
@@ -82,8 +85,8 @@ async function openaiCompletion(query, openaiApiKey, filePath) {
     return dbQuery;
 }
 
-// mosmql("Query restaurants collection for restaurants with American cuisine", process.env.OPENAI_API_KEY,
-//     './models/trainingModels/TrainingModels.txt', process.env.uri);
+mosmql("Query restaurants collection for restaurants with American cuisine", process.env.OPENAI_API_KEY,
+    './models/trainingModels/TrainingModels.txt', process.env.uri);
 
 
 module.exports = { mosmql };
