@@ -6,7 +6,7 @@ const { resolve } = require('path');
 
 
 
-async function executeMongodbQuery(query, mongodbUri) {
+async function executeMongodbQuery(query, database, mongodbUri) {
     try {
 
         // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -22,8 +22,7 @@ async function executeMongodbQuery(query, mongodbUri) {
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
-
-        const db = client.db("sample_restaurants");
+        const db = client.db(database);
         // query sample
         // var query = 'db.collection("restaurants").find({"grades.score": {$gt: 10}})';
         query = query.toString().replace(/\\/g, '');
@@ -48,10 +47,10 @@ async function databaseDataResult(promise) {
 }
 
 
-async function mosmql(query, openaiApiKey, filePath, mongodbUri) {
+async function mosmql(query, openaiApiKey, filePath, database, mongodbUri) {
 
     const dbQuery = await openaiCompletion(query, openaiApiKey, filePath);
-    const mongodbResult = await executeMongodbQuery(dbQuery, mongodbUri);
+    const mongodbResult = await executeMongodbQuery(dbQuery, database, mongodbUri);
     // in case of debugging uncomment
     //  console.log(mongodbResult);
     return mongodbResult;
@@ -85,7 +84,7 @@ async function openaiCompletion(query, openaiApiKey, filePath) {
     return dbQuery;
 }
 
-// mosmql("Query restaurants collection for restaurants with American cuisine", process.env.OPENAI_API_KEY,
+// mosmql("Query restaurants collection for restaurants with American cuisine", process.env.OPENAI_API_KEY,"sample_restaurants" ,
 //     './models/trainingModels/TrainingModels.txt', process.env.uri);
 
 
