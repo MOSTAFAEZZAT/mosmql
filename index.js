@@ -4,67 +4,84 @@ const fs = require('fs');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const { resolve } = require('path');
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(process.env.uri, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-    }
-});
 
-async function executeMongodbQuery(query) {
+
+async function executeMongodbQuery(query, mongodbUri) {
     try {
+
+        mongodbUri = process.env.uri;
+        // Create a MongoClient with a MongoClientOptions object to set the Stable API version
+        const client = new MongoClient(mongodbUri, {
+            serverApi: {
+                version: ServerApiVersion.v1,
+                strict: true,
+                deprecationErrors: true,
+            }
+        });
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
-        const database = client.db("sample_restaurants")
-        var query = 'database.collection("restaurants").findOne({ restaurant_id: "30075445"})';
+        const db = client.db("sample_restaurants");
+        // query sample
+        // var query = 'db.collection("restaurants").find({"grades.score": {$gt: 10}})';
+        query = query.toString().replace(/\\/g, '');
+        // uncomment to debug
+        console.log("query" + query);
         var dbResult = eval(query).then(res => { return res; });
         var dbResult = await databaseDataResult(dbResult)
-        // console.log("here " + JSON.stringify(dbResult))
         return JSON.stringify(dbResult);
     } finally {
         // Ensures that the client will close when you finish/error
-        await client.close();
+        // await client.close();
     }
 }
-// executeMongodbQuery().catch(console.dir);
+
 async function databaseDataResult(promise) {
     const data = await promise;
     return data;
 }
 
 
-async function textToMql(query) {
+async function mosmql(query, openaiApiKey, filePath, mongodbUri) {
 
-    // const openai_client = new OpenAI(process.env.OPEN_AI_KEY);
-
-    // var data = await fs.promises.readFile('./models/trainingModels/TrainingModels.txt', 'utf8');
-
-    // const learningModel = data;
-
-    // var mqlQueryAi = learningModel + "Q:" + query + "\nA:";
-    // //  console.log(aiInput); 
-    // const response = await openai_client.complete({
-    //     engine: 'davinci',
-    //     prompt: mqlQueryAi,
-    //     "temperature": 0.3,
-    //     "max_tokens": 400,
-    //     "top_p": 1,
-    //     "frequency_penalty": 0.2,
-    //     "presence_penalty": 0,
-    // });
-
-    // response.data.choices[0].text
-    const mongodbResult = await executeMongodbQuery('database.collection("restaurants").findOne({ restaurant_id: "30075445"})');
+    const dbQuery = await openaiCompletion(query, openaiApiKey, filePath);
+    const mongodbResult = await executeMongodbQuery(dbQuery, mongodbUri);
     console.log(mongodbResult);
 
-    // For Debugging 
-    // console.log("Final Response" + response.data.choices[0].text);
 }
 
-textToMql("test");
+async function openaiCompletion(query, openaiApiKey, filePath) {
+
+
+    const openai = new OpenAI(openaiApiKey);
+
+    var data = await fs.promises.readFile(filePath, 'utf8');
+
+    const learningModel = data;
+
+    var mqlQueryAi = learningModel + "Q:" + query + "\nA:";
+
+    const response = await openai.complete({
+        engine: 'davinci',
+        prompt: mqlQueryAi,
+        "temperature": 0.3,
+        "max_tokens": 400,
+        "top_p": 1,
+
+        "stop": ["\n"]
+    });
+
+    const dbQuery = response.data.choices[0].text;
+    // uncomment when you need debug
+    // console.log("dbQuery" + dbQuery + "\n\n");
+    return dbQuery;
+}
+
+mosmql("Query restaurants collection for restaurants with American cuisine", process.env.OPENAI_API_KEY,
+    './models/trainingModels/TrainingModels.txt', process.env.uri);
+
+
+module.exports = { mosmql };

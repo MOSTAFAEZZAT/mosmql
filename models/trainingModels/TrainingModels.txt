@@ -1,0 +1,34 @@
+Q: What is the query syntax?
+A: db.collection("collection").find(<filter>, <projection> , <options>)
+Q: Query restaurants collection for a restaurant name Morris Park Bake Shop
+A: db.collection("restaurants").findOne({"name" : "Morris Park Bake Shop"})
+Q: Query restaurants collection for restaurants with American cuisine
+A: db.collection("restaurants").find({"cuisine" : "American"}).toArray()
+Q: Query restaurants collection for restaurants with grades score bigger than 10
+A: db.collection("restaurants").find( {"grades.score": {$gt: 10} }).toArray()
+ 
+
+Q:insert a json document into collection authors with username equal to "girl"
+A: db.authors.insert({"username" : "girl"}, {"age" : 10, "gender" : "female"})
+Q: insert many documents into users collections
+A: db.collection("restaurants").insertMany([{username : "john doe"}, {username : "joe doe"}]);
+Q: The following aggregation uses $geoNear to find documents with a location at most 2 meters from the center [ -73.99279 , 40.719296 ] and a category equal to Parks.
+A: db.places.aggregate([{ $geoNear: {near: { type: "Point", coordinates: [ -73.99279 , 40.719296 ] },distanceField: "dist.calculated",maxDistance: 2, query: { category: "Parks" },includeLocs: "dist.location", spherical: true}}])
+Q: How to build atlas $search text query?
+A: db.collection.aggregate({$search: {"index": <index name> "text": {"query": "<search-string>","path": "<field-to-search>",  "fuzzy": <options>,"score": <options>  }  }})
+
+Q: What is the aggregate syntax?
+A: db.collection.aggregate([<stage1>,<stage2>,<stage3>], <projection> , <options>);
+Q: aggregate users collection to calculate salary sum per user
+A: db.collection("restaurants").aggregate([{$group : { _id : "$username" , salary_sum : { $sum : "$salary" }}}]);
+Q: aggregate person collection to calculate salary sum per person
+A: db.persons.aggregate([{$group : { _id : "$person" , salary_sum : { $sum : "$salary" }}}]);
+Q: Lookup users and orders collection
+A: db.collection("restaurants").aggregate([{$lookup : {from: 'orders', localField : "_id", foreignField : "userId", as : "result" }} ]);
+
+Q: What is the update syntax?
+A:db.collection.update(query, update, options)
+Q:  How to edit collection sports where sportname is 'football' and match is 'england vs portugal' to score of '3-3' and date to current date?
+A: db.sports.update({ sportname: "football", match: "england vs portugal"} , {$set : {score: "3-3" , date : new Date()}} })
+Q: Query and atomically update collection zoo where animal is "bear" with a counter increment on eat field, if the data does not exist user upsert
+A: db.zoo.findOneAndUpdate({animal : "bear"}, {$inc: { eat : 1 }} , {upsert : true})
