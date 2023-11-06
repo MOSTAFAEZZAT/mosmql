@@ -78,9 +78,9 @@ async function openaiCompletion(query, openaiApiKey, filePath) {
 }
 
 //  Sample call
-(async () => {
-    console.log(await mosmql("Query restaurants collection for a restaurant name Morris Park Bake Shop", process.env.OPENAI_API_KEY,
+/* (async () => {
+    console.log(await mosmql("Query restaurants collection for restaurants with American cuisine", process.env.OPENAI_API_KEY,
         './models/trainingModels/TrainingModels.txt', "sample_restaurants", process.env.uri))
-})();
+})(); */
 
 module.exports = { mosmql };
