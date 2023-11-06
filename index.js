@@ -1,9 +1,7 @@
-const OpenAI = require('openai-api');
+const OpenAI = require('openai');
 const dotenv = require('dotenv').config();
 const fs = require('fs');
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const { resolve } = require('path');
-
 
 
 async function executeMongodbQuery(query, database, mongodbUri) {
@@ -52,10 +50,8 @@ async function mosmql(query, openaiApiKey, filePath, database, mongodbUri) {
     const dbQuery = await openaiCompletion(query, openaiApiKey, filePath);
     const mongodbResult = await executeMongodbQuery(dbQuery, database, mongodbUri);
     // in case of debugging uncomment
-    //  console.log(mongodbResult);
+    // console.log(mongodbResult);
     return mongodbResult;
-
-
 }
 
 async function openaiCompletion(query, openaiApiKey, filePath) {
@@ -68,24 +64,23 @@ async function openaiCompletion(query, openaiApiKey, filePath) {
     const learningModel = data;
 
     var mqlQueryAi = learningModel + "Q:" + query + "\nA:";
-
-    const response = await openai.complete({
-        engine: 'davinci',
+    const completion = await openai.completions.create({
+        model: "text-davinci-003",
         prompt: mqlQueryAi,
-        "temperature": 0.3,
-        "max_tokens": 400,
-        "top_p": 1,
-        "stop": ["\n"]
+        max_tokens: 100,
+        temperature: 0,
     });
-
-    const dbQuery = response.data.choices[0].text;
+    const dbQuery = completion.choices[0].text;
     // uncomment when you need debug
     // console.log("dbQuery" + dbQuery + "\n\n");
+
     return dbQuery;
 }
 
-// mosmql("Query restaurants collection for restaurants with American cuisine", process.env.OPENAI_API_KEY,"sample_restaurants" ,
-//     './models/trainingModels/TrainingModels.txt', process.env.uri);
-
+//  Sample call
+/* (async () => {
+    console.log(await mosmql("Query restaurants collection for a restaurant name Morris Park Bake Shop", process.env.OPENAI_API_KEY,
+        './models/trainingModels/TrainingModels.txt', "sample_restaurants", process.env.uri))
+})(); */
 
 module.exports = { mosmql };
