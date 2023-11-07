@@ -16,7 +16,7 @@
 
 `npm i mosmql`
 
-### Description
+### How to use
 
 ### Donations
 
