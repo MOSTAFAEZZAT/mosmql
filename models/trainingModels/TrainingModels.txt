@@ -6,7 +6,8 @@ Q: Query restaurants collection for restaurants with American cuisine
 A: db.collection("restaurants").find({"cuisine" : "American"}).toArray()
 Q: Query restaurants collection for restaurants with grades score bigger than 10
 A: db.collection("restaurants").find( {"grades.score": {$gt: 10} }).toArray()
- 
+Q: Quert restaurants collection for the last 50 entries 
+A: db.collection("restaurants").find().sort({$natural:1}).limit(50);
 
 Q:insert a json document into collection authors with username equal to "girl"
 A: db.authors.insert({"username" : "girl"}, {"age" : 10, "gender" : "female"})

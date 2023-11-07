@@ -79,7 +79,7 @@ async function openaiCompletion(query, openaiApiKey, filePath) {
 
 //  Sample call
 /* (async () => {
-    console.log(await mosmql("Query restaurants collection for restaurants with American cuisine", process.env.OPENAI_API_KEY,
+    console.log(await mosmql("Query restaurants collection for restaurants with Bakery cuisine", process.env.OPENAI_API_KEY,
         './models/trainingModels/TrainingModels.txt', "sample_restaurants", process.env.uri))
 })(); */
 
