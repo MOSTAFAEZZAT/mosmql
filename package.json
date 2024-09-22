@@ -1,6 +1,6 @@
 {
   "name": "mosmql",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "description": "Generate a MongoDb/Monitoring Query Language (MQL) through OpenAI GPT",
   "main": "index.js",
   "scripts": {
