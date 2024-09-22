@@ -1,4 +1,4 @@
-# mql-mongodb-nodejs
+# mosmql
 
 ### Prerequisites
 
