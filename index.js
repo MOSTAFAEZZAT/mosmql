@@ -74,15 +74,5 @@ class Mosmql {
     }
 }
 
-// Sample invoke
-/* (async () => {
-    const mosmqlInstance = new Mosmql(
-        process.env.OPENAI_API_KEY,
-        './models/trainingModels/TrainingModels.txt',
-        "sample_restaurants",
-        process.env.uri
-    );
-    console.log(await mosmqlInstance.mosmql("Query restaurants collection for restaurants with Bakery cuisine"));
-})(); */
 
 module.exports = Mosmql;
